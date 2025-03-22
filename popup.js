@@ -18,18 +18,41 @@ function formatText(text) {
     .replace(/\n/g, '<br>');
 }
 
+// Function to show error message
+function showError(message) {
+  const errorDiv = document.getElementById('error');
+  const errorMessage = errorDiv.querySelector('span');
+  errorMessage.textContent = message;
+  errorDiv.classList.add('visible');
+  setTimeout(() => {
+    errorDiv.classList.remove('visible');
+  }, 5000);
+}
+
+// Function to show success message
+function showSuccess() {
+  const successDiv = document.querySelector('.success-message');
+  successDiv.classList.add('visible');
+  setTimeout(() => {
+    successDiv.classList.remove('visible');
+  }, 3000);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   const summarizeButton = document.getElementById('summarize');
   const loadingDiv = document.getElementById('loading');
   const errorDiv = document.getElementById('error');
   const summaryDiv = document.getElementById('summary');
+  const successDiv = document.querySelector('.success-message');
 
   summarizeButton.addEventListener('click', async () => {
     try {
-      // Show loading state
-      loadingDiv.style.display = 'block';
-      errorDiv.textContent = '';
+      // Reset UI state
+      loadingDiv.classList.add('visible');
+      errorDiv.classList.remove('visible');
+      successDiv.classList.remove('visible');
       summaryDiv.innerHTML = '';
+      summarizeButton.disabled = true;
 
       // Get the active tab
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -41,7 +64,6 @@ document.addEventListener('DOMContentLoaded', function() {
           files: ['content.js']
         });
       } catch (e) {
-        // Script might already be injected, continue
         console.log('Script might already be injected:', e);
       }
 
@@ -101,31 +123,33 @@ document.addEventListener('DOMContentLoaded', function() {
         })
       });
 
-      let errorData;
+      let data;
       try {
-        errorData = await apiResponse.json();
+        data = await apiResponse.json();
       } catch (e) {
         throw new Error(`API Error: Failed to parse response. Status: ${apiResponse.status}`);
       }
 
       if (!apiResponse.ok) {
-        throw new Error(`API Error: ${errorData.error?.message || `Status ${apiResponse.status}`}`);
+        throw new Error(`API Error: ${data.error?.message || `Status ${apiResponse.status}`}`);
       }
 
-      if (!errorData.candidates || !errorData.candidates[0]?.content?.parts?.[0]?.text) {
+      if (!data.candidates || !data.candidates[0]?.content?.parts?.[0]?.text) {
         throw new Error('Invalid response format from API');
       }
       
-      const markdownSummary = errorData.candidates[0].content.parts[0].text;
+      const markdownSummary = data.candidates[0].content.parts[0].text;
       
       // Convert markdown to HTML and display
       summaryDiv.innerHTML = formatText(markdownSummary);
+      showSuccess();
       
     } catch (error) {
-      errorDiv.textContent = `Error: ${error.message}`;
+      showError(error.message);
       console.error('Detailed error:', error);
     } finally {
-      loadingDiv.style.display = 'none';
+      loadingDiv.classList.remove('visible');
+      summarizeButton.disabled = false;
     }
   });
 }); 
