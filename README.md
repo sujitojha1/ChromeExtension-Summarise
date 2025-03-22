@@ -1,41 +1,92 @@
 # Web Content Summarizer Chrome Extension
 
-This Chrome extension uses Google's Gemini API to generate concise summaries of webpage content and highlight important links.
+A Chrome extension that uses Google's Gemini API to generate concise summaries of webpage content and highlight important links.
 
 ## Features
 
-- Extracts main content from any webpage
-- Identifies important links
 - Generates AI-powered summaries using Gemini API
-- Clean and modern user interface
+- Extracts and highlights important links from the page
+- Modern, clean UI with Aptos font
+- Wikipedia integration for complex terms
+- Markdown-style formatting for better readability
+- Real-time loading states and error handling
 
-## Setup Instructions
+## Demo
 
-1. Clone or download this repository
+Watch the extension in action: [YouTube Demo](https://www.youtube.com/watch?v=LC7HtyDqYi8)
+
+## Installation
+
+1. Clone this repository or download the source code
 2. Get a Gemini API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
-3. Open `popup.js` and replace `YOUR_GEMINI_API_KEY` with your actual API key
+3. Create a `config.js` file in the root directory with your API key:
+   ```javascript
+   const config = {
+       GEMINI_API_KEY: 'YOUR_API_KEY_HERE',
+       GEMINI_API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent'
+   };
+   export default config;
+   ```
 4. Open Chrome and go to `chrome://extensions/`
 5. Enable "Developer mode" in the top right
 6. Click "Load unpacked" and select the extension directory
 
 ## Usage
 
-1. Navigate to any webpage you want to summarize
-2. Click the extension icon in your Chrome toolbar
-3. Click the "Summarize Page" button
-4. Wait for the AI to generate a summary
-5. The summary will include:
-   - Main content overview
-   - Key points
+1. Click the extension icon in your Chrome toolbar
+2. Click "Summarize Page" to generate a summary
+3. The summary will include:
+   - Brief overview of the content
+   - Key points and takeaways
    - Important links with descriptions
+   - Wikipedia links for complex terms
 
-## Files
+## Security
 
-- `manifest.json`: Extension configuration
-- `popup.html`: Extension popup interface
-- `popup.js`: Popup logic and API integration
-- `content.js`: Content extraction script
+- API keys are stored locally in `config.js`
+- `config.js` is included in `.gitignore` to prevent accidental commits
+- Content Security Policy is configured for secure API communication
 
-## Note
+## Development
 
-Make sure to keep your Gemini API key secure and never share it publicly. The extension requires an active internet connection to function. 
+The extension uses:
+- Modern JavaScript (ES modules)
+- Chrome Extension Manifest V3
+- Gemini API for content summarization
+- Aptos font for modern typography
+
+## File Structure
+
+```
+├── manifest.json
+├── popup.html
+├── popup.js
+├── content.js
+├── config.js
+├── fonts/
+│   ├── Aptos-Regular.woff2
+│   ├── Aptos-Medium.woff2
+│   └── Aptos-SemiBold.woff2
+└── icons/
+    ├── icon16.png
+    ├── icon48.png
+    └── icon128.png
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a new Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Google Gemini API for content summarization
+- Aptos font for modern typography
+- Chrome Extension APIs 
