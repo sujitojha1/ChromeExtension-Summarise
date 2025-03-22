@@ -1,6 +1,4 @@
-// Replace with your Gemini API key
-const GEMINI_API_KEY = 'AIzaSyBOO1mZSMtx8JANU24AwACUERkr8XvUbvQ';
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+import config from './config.js';
 
 // Function to convert markdown-like text to HTML
 function formatText(text) {
@@ -83,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
       3. Most relevant links with brief descriptions`;
 
       // Call Gemini API
-      const apiResponse = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+      const apiResponse = await fetch(`${config.GEMINI_API_URL}?key=${config.GEMINI_API_KEY}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
